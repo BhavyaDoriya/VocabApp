@@ -108,4 +108,4 @@ lib/
 
 ## 🛡️ License
 
-This project is licensed under the [MIT License](https://choosealicense.com/licenses/mit/). See the `LICENSE` file in the root directory for full details.
+This project is licensed under the [MIT License](https://choosealicense.com/licenses/mit/). See the [LICENSE](LICENSE) file in the root directory for full details.
