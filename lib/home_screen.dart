@@ -4,6 +4,8 @@ import 'auth_screen.dart';
 import 'study_screen.dart'; 
 import 'settings_screen.dart';
 import 'test_screen.dart';
+import 'memory_bank_screen.dart'; // THE NEW ARCHIVE SCREEN
+import 'audio_manager.dart'; // FOR THE THUMP SOUND
 import 'dusty_atmosphere.dart'; // THE PHYSICS ENGINE
 import 'tactical_button.dart'; // THE GAME BUTTON
 import 'tactical_panel.dart'; // THE GAME HUD PANEL
@@ -168,6 +170,25 @@ class _HomeScreenState extends State<HomeScreen> {
                               setState(() => isLoading = true);
                               _loadDashboardData(); 
                             });
+                          },
+                        ),
+                      ),
+                      
+                      const SizedBox(height: 24),
+                      
+                      // --- THE NEW MEMORY BANK BUTTON ---
+                      // --- THE NEW MEMORY BANK PANEL ---
+                      TacticalPanel(
+                        title: "DATA ARCHIVE",
+                        subtitle: "Access and decrypt previously acquired terminology.",
+                        bottomWidget: TacticalButton(
+                          label: "MEMORY BANK",
+                          onTap: () {
+                            AudioManager().playThump();
+                            Navigator.push(
+                              context, 
+                              MaterialPageRoute(builder: (context) => const MemoryBankScreen()),
+                            );
                           },
                         ),
                       ),

@@ -1,4 +1,5 @@
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/foundation.dart'; // <-- 1. IMPORT FOUNDATION
 
 class AudioManager {
   // The Singleton instance
@@ -12,26 +13,29 @@ class AudioManager {
   bool _isBgmPlaying = false;
 
   // --- THE FIX: AUDIO CONTEXT CONFIGURATION ---
- // --- THE FIX: AUDIO CONTEXT CONFIGURATION ---
   AudioManager._internal() {
     // Tell the OS to allow audio mixing and NEVER steal audio focus
-    final audioContext = AudioContext(
-      android: AudioContextAndroid(
-        isSpeakerphoneOn: false,
-        stayAwake: false,
-        contentType: AndroidContentType.music,
-        usageType: AndroidUsageType.media,
-        audioFocus: AndroidAudioFocus.none, // <-- THIS IS THE MAGIC KEY
-      ),
-      iOS: AudioContextIOS(
-        category: AVAudioSessionCategory.ambient, // Allows mixing on iOS
-        options: const { // <-- CHANGED TO CURLY BRACES AND ADDED const
-          AVAudioSessionOptions.mixWithOthers,
-        },
-      ),
-    );
-    AudioPlayer.global.setAudioContext(audioContext);
+    // 2. ONLY APPLY THIS ON NATIVE APPS, IGNORE ON WEB
+    if (!kIsWeb) {
+      final audioContext = AudioContext(
+        android: AudioContextAndroid(
+          isSpeakerphoneOn: false,
+          stayAwake: false,
+          contentType: AndroidContentType.music,
+          usageType: AndroidUsageType.media,
+          audioFocus: AndroidAudioFocus.none, // <-- THIS IS THE MAGIC KEY
+        ),
+        iOS: AudioContextIOS(
+          category: AVAudioSessionCategory.ambient, // Allows mixing on iOS
+          options: const { // <-- CHANGED TO CURLY BRACES AND ADDED const
+            AVAudioSessionOptions.mixWithOthers,
+          },
+        ),
+      );
+      AudioPlayer.global.setAudioContext(audioContext);
+    }
   }
+
   // --- BACKGROUND MUSIC ---
   Future<void> startBgm() async {
     if (_isBgmPlaying) return; // Don't restart if already playing

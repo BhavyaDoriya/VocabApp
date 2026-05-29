@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter/foundation.dart'; // <-- 1. IMPORT FOUNDATION
 import 'onboarding_screen.dart';
 import "home_screen.dart";
 import 'dusty_atmosphere.dart'; 
@@ -75,7 +76,8 @@ class _AuthScreenState extends State<AuthScreen> {
     try {
       await _supabase.auth.resetPasswordForEmail(
         _emailController.text.trim(),
-        redirectTo: 'vocabapp://callback', // Redirects back to your web app
+        // 2. CONDITIONAL REDIRECT
+        redirectTo: kIsWeb ? null : 'vocabapp://callback', 
       );
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Recovery directive sent. Check your inbox.'), backgroundColor: Color(0xFF2E7D32)));
@@ -148,7 +150,8 @@ class _AuthScreenState extends State<AuthScreen> {
         await _supabase.auth.signUp(
           email: _emailController.text.trim(),
           password: _passwordController.text.trim(),
-          emailRedirectTo: 'vocabapp://callback', 
+          // 3. CONDITIONAL REDIRECT
+          emailRedirectTo: kIsWeb ? null : 'vocabapp://callback', 
         );
         
         if (mounted) {
@@ -205,7 +208,8 @@ class _AuthScreenState extends State<AuthScreen> {
     try {
       await _supabase.auth.signInWithOAuth(
         OAuthProvider.google,
-        redirectTo: 'vocabapp://callback', 
+        // 4. CONDITIONAL REDIRECT
+        redirectTo: kIsWeb ? null : 'vocabapp://callback', 
       );
     } catch (e) {
       if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Failed to launch Google Sign-In'), backgroundColor: Colors.redAccent));
